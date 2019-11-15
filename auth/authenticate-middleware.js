@@ -1,18 +1,22 @@
 const jwt = require("jsonwebtoken");
 
+const secrets = require("../Config/secrets");
+
 module.exports = (req, res, next) => {
 	const token = req.headers.authorization;
 
 	if (token) {
-		jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+		jwt.verify(token, secrets.jwtSecret, (err, actualToken) => {
 			if (err) {
 				res.status(401).json({ you: "shall not pass!" });
 			} else {
-				req.decodedToken = decodedToken;
+				req.user = {
+					username: actualToken.username
+				};
 				next();
 			}
 		});
 	} else {
-		res.status(400).json({ message: "sorry guy, can't let you in" });
+		res.status(400).json({ message: "No credentials were given" });
 	}
 };
