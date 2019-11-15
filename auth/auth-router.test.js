@@ -16,11 +16,11 @@ describe("auth-router", () => {
 				.send({ username: "test", password: "test123" })
 				.expect(201);
 		});
-		it("should respond with 400 with invalid request", async () => {
+		it("should respond with 500 with invalid request", async () => {
 			await request(server)
 				.post("/api/auth/register")
 				.send({ username: "" })
-				.expect(400);
+				.expect(500);
 		});
 	});
 
